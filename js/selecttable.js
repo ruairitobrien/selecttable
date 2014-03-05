@@ -5,7 +5,7 @@
             backgroundColor: "RED"
             
         }, options);
-        this.find( "td" ).css( "background-color", settings.backgroundColor );
+        //this.find( "td" ).css( "background-color", settings.backgroundColor );
         
         var test = function(text) {
             return text;
