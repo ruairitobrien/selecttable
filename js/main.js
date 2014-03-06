@@ -2,7 +2,8 @@ var sampleTable1 = $('#sample1');
 var sampleTable2 = $('#sample2');
 var test1 = sampleTable1.tableSelect();
 var test2 = sampleTable2.tableSelect({
-	selectClass: 'select'
+	selectedClass: 'select',
+	addMenu: true
 });
 
 

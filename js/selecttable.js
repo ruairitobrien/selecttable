@@ -20,68 +20,24 @@
             addMenu: false
         }, options);
 
-        // Initialize
-        (function() {
-            tableRows = $scope.find( "tbody tr" ); // Cache the last selected row. Primarily for shift key selection.
-            selectedRows = 0;
-            // If the addMenu flag is true, insert the menu to the top of the table.
-            if (settings.addMenu) {
-                var insertMenu = function () {
-
-                };
-            }
-        })();
-
-        //=======================================
-        // Initialization
-        //=======================================
-
-        // Affect only rows within the table body.
-        tableRows.click( function(e){
-            if (e.metaKey || e.ctrlKey) {
-                //Cmd+Click or Ctrl+Click
-                $(this).toggleClass(settings.selectedClass);
-            } else {
-                if (e.shiftKey) {
-                    //Shift-Click
-                    if(lastSelectedRow) {
-                        var currentRowIndex = tableRows.index($(this));
-                        var lastRowIndex = tableRows.index(lastSelectedRow);
-
-                        var start = lastRowIndex;
-                        var end = currentRowIndex;                         
-                        if (currentRowIndex < lastRowIndex) {
-                            start = currentRowIndex;
-                            end = lastRowIndex;
-                        } 
-                        var i;
-                        var count = tableRows.length; 
-                        for (i = start; i <= end; i++) {
-                            if(i >= 0 && i < count) {
-                                if(!(i === lastRowIndex)) {
-                                    $(tableRows[i]).addClass(settings.selectedClass);
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    clearTableSelection();
-                }
-                $(this).addClass(settings.selectedClass);
-            }
-            lastSelectedRow = $(this);
-            updateSelectedRows();
-        });
-
         //=======================================
         // Private functions
         //=======================================
+
+        var getAllRows = function () {
+                return tableRows;
+        };
+
         var updateSelectedRows = function () {
             selectedRows = tableRows.filter('.selected').length;
         };
 
         var insertMenu = function () {
-
+            $('<tr><td colspan="' + getColumnCount() + '">'
+                + 'Select All <input type="radio" class="selectAll" name="selectAll" />'
+                + 'Clear All <input type="radio" class="clearAll" name="clearAll" />'
+                + '</td></tr>')
+            .prependTo($scope.children('tbody'));
         };
     
         //=======================================
@@ -117,6 +73,55 @@
             }
             return columnCount;
         }
+
+        //=======================================
+        // Initialization
+        //=======================================
+
+        tableRows = $scope.find( "tbody tr" ); // Cache the last selected row. Primarily for shift key selection.
+        selectedRows = 0;
+        // If the addMenu flag is true, insert the menu to the top of the table.
+        if (settings.addMenu) {
+            insertMenu();
+        }
+
+        // Affect only rows within the table body.
+        tableRows.click( function(e){
+            if (e.metaKey || e.ctrlKey) {
+                //Cmd+Click or Ctrl+Click
+                $(this).toggleClass(settings.selectedClass);
+            } else {
+                if (e.shiftKey) {
+                    //Shift-Click
+                    if(lastSelectedRow) {
+                        var currentRowIndex = tableRows.index($(this));
+                        var lastRowIndex = tableRows.index(lastSelectedRow);
+
+                        var start = lastRowIndex;
+                        var end = currentRowIndex;                         
+                        if (currentRowIndex < lastRowIndex) {
+                            start = currentRowIndex;
+                            end = lastRowIndex;
+                        } 
+                        var i;
+                        var count = tableRows.length; 
+                        for (i = start; i <= end; i++) {
+                            if(i >= 0 && i < count) {
+                                if(!(i === lastRowIndex)) {
+                                    $(tableRows[i]).addClass(settings.selectedClass);
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    clearTableSelection();
+                }
+                $(this).addClass(settings.selectedClass);
+            }                
+            lastSelectedRow = $(this);
+            updateSelectedRows();
+        });
+
         
         
         return {
